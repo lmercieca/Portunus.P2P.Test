@@ -14,7 +14,7 @@ namespace ClientV2
         const string SERVER_IP = "69.6.36.79";
 
         const int CLIENT_PORT_NO = 5001;
-        const string CLIENT_SERVER_IP = "69.6.36.79";
+        const string CLIENT_SERVER_IP = "23.97.216.14";
 
         static void Main(string[] args)
         {

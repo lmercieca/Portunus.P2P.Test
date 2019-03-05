@@ -10,23 +10,30 @@ namespace Client
 {
     class Program
     {
-        const int Server_Port = 5002;
-        const string SERVER_IP = "69.6.36.79";
+        const int Server_Port = 5001;
+        const string SERVER_IP = "23.97.216.14";
+        //const string SERVER_IP = "127.0.0.1";
 
-        const int CLIENT_PORT_NO = 5001;
-        const string CLIENT_SERVER_IP = "69.6.36.79";
+        const int CLIENT_PORT_NO = 5002;
+        const string CLIENT_SERVER_IP = "84.255.45.106";
 
 
         static void Main(string[] args)
         {
             UdpHandler.UDPWrapper serverWrapper = new UdpHandler.UDPWrapper(SERVER_IP, Server_Port);
-            UdpHandler.UDPWrapper clientWrapper = new UdpHandler.UDPWrapper(CLIENT_SERVER_IP, CLIENT_PORT_NO);
+            //   UdpHandler.UDPWrapper clientWrapper = new UdpHandler.UDPWrapper(CLIENT_SERVER_IP, CLIENT_PORT_NO);
+
+            serverWrapper.ReceiveMessage();
 
             serverWrapper.SendMessage("Hello from client 1");
 
-            System.Threading.Thread.Sleep(1000);
+            // System.Threading.Thread.Sleep(1000);
 
-            clientWrapper.SendMessage("Hello from client 1, just for you.");
+            // clientWrapper.SendMessage("Hello from client 1, just for you.");
+
+            while (true)
+            {
+            }
         }
     }
 }

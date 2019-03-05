@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sockets.Plugin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,44 +11,47 @@ namespace UdpHandler
 {
     public class UDPWrapper
     {
-        IPEndPoint endPoint;
+        string DesintationIp;
+        int Port;
 
         public UDPWrapper(string desintationIp, int port)
         {
-            IPAddress destIp = IPAddress.Parse(desintationIp);
-
-            endPoint = new IPEndPoint(destIp, port);
+            this.DesintationIp = desintationIp;
+            this.Port = port;
         }
 
-        public string SendMessage(string message)
+        public async void SendMessage(string message)
         {
-            string serverResponse = string.Empty;       // The variable which we will use to store the server response
+           
+            var client = new UdpSocketClient();
 
-            using (UdpClient client = new UdpClient())
-            {
-                byte[] data = Encoding.UTF8.GetBytes(message);      // Convert our message to a byte array
-                client.Send(data, data.Length, endPoint);      // Send the date to the server
+            // convert our greeting message into a byte array
+            var msgBytes = Encoding.UTF8.GetBytes(message);
 
-                serverResponse = Encoding.UTF8.GetString(client.Receive(ref endPoint));    // Retrieve the response from server as byte array and convert it to string
-            }
-
-            return serverResponse;
+            // send to address:port, 
+            // no guarantee that anyone is there 
+            // or that the message is delivered.
+            await client.SendToAsync(msgBytes, this.DesintationIp, this.Port);
         }
 
-        public string ReceiveMessage()
+        public async void  ReceiveMessage()
         {
-            string serverResponse = string.Empty;       // The variable which we will use to store the server response
+            
+            var receiver = new UdpSocketReceiver();
 
-            using (UdpClient client = new UdpClient())
+            receiver.MessageReceived += (sender, args) =>
             {
-                serverResponse = Encoding.UTF8.GetString(client.Receive(ref endPoint));    // Retrieve the response from server as byte array and convert it to string
+                // get the remote endpoint details and convert the received data into a string
+                var from = String.Format("{0}:{1}", args.RemoteAddress, args.RemotePort);
+                var data = Encoding.UTF8.GetString(args.ByteData, 0, args.ByteData.Length);
 
-                byte[] data = Encoding.UTF8.GetBytes("Received " + serverResponse);      // Convert our message to a byte array
-                client.Send(data, data.Length, endPoint);      // Send the date to the server
+                string returnMsg =String.Format("{0} - {1}", from, data);
+                Console.WriteLine(returnMsg);
+                //SendMessage(returnMsg);
+            };
 
-            }
-
-            return serverResponse;
+            // listen for udp traffic on listenPort
+            await receiver.StartListeningAsync(this.Port);
         }
 
 
