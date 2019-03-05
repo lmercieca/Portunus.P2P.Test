@@ -49,5 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UdpHandler\UdpHandler.csproj">
+      <Project>{84179a63-c131-4b48-8313-a9f9bad4703a}</Project>
+      <Name>UdpHandler</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
