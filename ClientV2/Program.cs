@@ -10,7 +10,7 @@ namespace ClientV2
 {
     class Program
     {
-
+        //updated
         const int Server_Port = 5001;
         const string SERVER_IP = "51.136.23.107";
         //const string SERVER_IP = "127.0.0.1";
