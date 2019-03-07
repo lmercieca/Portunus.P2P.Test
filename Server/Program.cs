@@ -22,7 +22,6 @@ namespace Server
             UdpHandler.UDPWrapper secClientWrapper = new UdpHandler.UDPWrapper(SERVER_IP, Server_Port);
             UdpHandler.UDPWrapper clientWrapper = new UdpHandler.UDPWrapper(CLIENT_SERVER_IP, CLIENT_PORT_NO);
 
-
             secClientWrapper.ReceiveMessage();
             clientWrapper.ReceiveMessage();
 
