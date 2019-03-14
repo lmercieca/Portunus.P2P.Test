@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+  <client_one fromIp="85.232.199.239" fromPort="5001" toIp="13.93.90.155" toPort="5001"></client_one>
+  <client_two fromIp="" fromPort="" toIp="" toPort=""></client_two>
+  <server fromIp="13.93.90.155" fromPort="5001" toIp="85.232.199.239" toPort="5001"></server>
+</config>

@@ -5,11 +5,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using UdpHandler;
 
 namespace ClientV2
 {
     class Program
     {
+        /*
         //updated
         const int Server_Port = 5001;
         const string SERVER_IP = "23.97.244.188";
@@ -21,22 +23,26 @@ namespace ClientV2
 
         const int Source_PORT_NO = 5001;
         const string Source_SERVER_IP = "84.255.45.106";
-
+        */
 
         static void Main(string[] args)
         {
-            UdpHandler.UDPWrapper serverWrapper = new UdpHandler.UDPWrapper(Source_SERVER_IP, Source_PORT_NO, SERVER_IP, Server_Port);
-            UdpHandler.UDPWrapper clientWrapper = new UdpHandler.UDPWrapper(Source_SERVER_IP, Source_PORT_NO, CLIENT_SERVER_IP, CLIENT_PORT_NO);
+            int fromPort = ConfigManager.GetFromPort(ConfigManager.Mode.client_two);
+            string fromIp = ConfigManager.GetFromIP(ConfigManager.Mode.client_two);
+            int toPort = ConfigManager.GetToPort(ConfigManager.Mode.client_two); ;
+            string toIp = ConfigManager.GetToIP(ConfigManager.Mode.client_two);
 
 
-            serverWrapper.ReceiveMessage();
-            clientWrapper.ReceiveMessage();
+            UdpHandler.UDPWrapper serverWrapper = new UdpHandler.UDPWrapper(fromIp, fromPort, toIp, toPort);
 
-            serverWrapper.SendMessage("Hello from client 1");
+            serverWrapper.ReceiveMessage(5001);
+            serverWrapper.SendMessage("Hello from client 2");
 
-            System.Threading.Thread.Sleep(1000);
+            while (true)
+            {
+                System.Threading.Thread.Sleep(1000);
 
-            clientWrapper.SendMessage("Hello from client 2, just for you.");
+            }
         }
     }
 }
