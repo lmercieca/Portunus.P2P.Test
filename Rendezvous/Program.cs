@@ -38,8 +38,8 @@ namespace Server
         {
             AsynchronousClient socket = new AsynchronousClient();
 
-            await socket.StartListener(config.Servers[0].Port,config.Client.Address, config.Client.Port);
-            await socket.StartListener(config.Servers[0].Port, config.Host.Address, config.Host.Port);
+            await socket.StartListener(config.Servers[1].Port, config.Client.Address, config.Client.Port);
+            await socket.StartListener(config.Servers[1].Port, config.Host.Address, config.Host.Port);
         }
 
 
@@ -51,7 +51,7 @@ namespace Server
             {
                 StartUDPClient();
 
-               //StartTCPClient();
+                //StartTCPClient();
             }
             catch (Exception ex)
             {

@@ -7,35 +7,42 @@ using System.Xml;
 
 namespace UdpHandler
 {
-    public static class ConfigManager
+    public class Node
     {
+        public string Address { get; set; }
+        public int Port { get; set; }        
+
+
+        public Node(XmlNode node)
+        {
+            this.Address =  node.Attributes["address"].Value;
+            this.Port = int.Parse(node.Attributes["port"].Value);            
+        }
+    }
+
+    public class ConfigManager
+    {
+        public Node Host { get; set; }
+        public Node Client { get; set; }
+        public List<Node> Servers { get; set; }
+
         public enum Mode { client_one, client_two, server};
-        public static string GetFromIP(Mode mode)
+        
+        public ConfigManager()
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("config.xml");
-            return doc.DocumentElement.SelectSingleNode("./" + mode.ToString()).Attributes["fromIp"].Value;            
-        }
+            Servers = new List<Node>();
 
-        public static int GetFromPort(Mode mode)
-        {
             XmlDocument doc = new XmlDocument();
             doc.Load("config.xml");
-            return int.Parse(doc.DocumentElement.SelectSingleNode("./" + mode.ToString()).Attributes["fromPort"].Value);
-        }
 
-        public static string GetToIP(Mode mode)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("config.xml");
-            return doc.DocumentElement.SelectSingleNode("./" + mode.ToString()).Attributes["toIp"].Value;
-        }
+            Host = new Node(doc.DocumentElement.SelectSingleNode("./clients/host"));
+            Client = new Node(doc.DocumentElement.SelectSingleNode("./clients/client"));
 
-        public static int GetToPort(Mode mode)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("config.xml");
-            return int.Parse(doc.DocumentElement.SelectSingleNode("./" + mode.ToString()).Attributes["toPort"].Value);
+            foreach (XmlNode node in doc.DocumentElement.SelectNodes("./servers/server"))
+            {
+                Servers.Add(new Node(node));
+            }
+
         }
     }
 }

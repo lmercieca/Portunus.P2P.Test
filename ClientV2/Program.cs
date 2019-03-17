@@ -4,44 +4,80 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UdpHandler;
 
-namespace ClientV2
+namespace Client
 {
     class Program
     {
-        /*
-        //updated
-        const int Server_Port = 5001;
-        const string SERVER_IP = "23.97.244.188";
-        //const string SERVER_IP = "127.0.0.1";
-
-        const int CLIENT_PORT_NO = 5002;
-        const string CLIENT_SERVER_IP = "69.6.36.79";
+        static ConfigManager config = new ConfigManager();
 
 
-        const int Source_PORT_NO = 5001;
-        const string Source_SERVER_IP = "84.255.45.106";
-        */
-
-        static void Main(string[] args)
+        static void StartTCPClient()
         {
-            int fromPort = ConfigManager.GetFromPort(ConfigManager.Mode.client_two);
-            string fromIp = ConfigManager.GetFromIP(ConfigManager.Mode.client_two);
-            int toPort = ConfigManager.GetToPort(ConfigManager.Mode.client_two); ;
-            string toIp = ConfigManager.GetToIP(ConfigManager.Mode.client_two);
+
+            TCPSocket socket = new TCPSocket();
+
+            new Thread(() =>
+            {
+                socket.StartListening(config.Host.Port);
+            });
+
+            socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello Server 1, this is the client");
+            socket.Send(config.Servers[1].Address, config.Servers[1].Port, "Hello Server 2, this is the client");
+
+        }
+
+        static async void StartUDPClient()
+        {
+            AsynchronousClient socket = new AsynchronousClient();
 
 
-            UdpHandler.UDPWrapper serverWrapper = new UdpHandler.UDPWrapper(fromIp, fromPort, toIp, toPort);
+            //new Thread(() =>
+            //{
+            socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello server 1, this is the client");
+            socket.Send(config.Servers[1].Address, config.Servers[1].Port, "Hello server 2, this is the client");
 
-            serverWrapper.ReceiveMessage(5001);
-            serverWrapper.SendMessage("Hello from client 2");
+            new Thread(async () =>
+            {
+                Thread.Sleep(5000);
+                await socket.StartListener(config.Host.Port, config.Servers[0].Address, config.Servers[0].Port);
+                await socket.StartListener(config.Host.Port, config.Servers[1].Address, config.Servers[1].Port);
+            });
+
+
+            //});
 
             while (true)
             {
-                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine("Enter new port");
+                int newPort = int.Parse(Console.ReadLine());
 
+                socket.Send(config.Servers[0].Address, newPort, "Hello server 1, this is the client");
+                socket.Send(config.Servers[1].Address, newPort, "Hello server 2, this is the client");
+
+                Thread.Sleep(5000);
+                new Thread(async () =>
+                {
+                    await socket.StartListener(newPort, config.Servers[0].Address, config.Servers[0].Port);
+                    await socket.StartListener(newPort, config.Servers[1].Address, config.Servers[1].Port);
+                });
+
+
+            }
+
+        }
+
+        static void Main(string[] args)
+        {
+            //StartTCPClient();
+            StartUDPClient();
+
+            while (true)
+            {
+                System.Threading.Thread.Sleep(500);
             }
         }
     }
