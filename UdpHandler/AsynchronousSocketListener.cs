@@ -2,16 +2,18 @@
 using System.Net;  
 using System.Net.Sockets;  
 using System.Text;  
-using System.Threading;  
-  
+using System.Threading;
+using UdpHandler;
 
 public class AsynchronousSocketListener
 {
     // Thread signal.  
     public  ManualResetEvent allDone = new ManualResetEvent(false);
+    UDPSocket sock;
 
-    public AsynchronousSocketListener()
+    public AsynchronousSocketListener(UDPSocket socket)
     {
+        this.sock = socket;
     }
 
     public  void StartListening(string serverAddress, int port)
@@ -29,6 +31,10 @@ public class AsynchronousSocketListener
         // Create a TCP/IP socket.  
         Socket listener = new Socket(ipAddress.AddressFamily,
             SocketType.Stream, ProtocolType.Tcp);
+
+        listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+
+
 
         // Bind the socket to the local endpoint and listen for incoming connections.  
         try
@@ -78,7 +84,7 @@ public class AsynchronousSocketListener
             new AsyncCallback(ReadCallback), state);
     }
 
-    public  void ReadCallback(IAsyncResult ar)
+    public async void ReadCallback(IAsyncResult ar)
     {
         String content = String.Empty;
 
@@ -106,6 +112,15 @@ public class AsynchronousSocketListener
                 Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
                     content.Length, content);
                 // Echo the data back to the client.  
+
+                IPEndPoint endpoint = handler.RemoteEndPoint as IPEndPoint;
+
+
+                content += " from the server";
+                Console.WriteLine("Sending back to UDP on " + endpoint.Address.ToString() + " at " + endpoint.Port);
+                await sock.SendTo(endpoint.Address.ToString(), endpoint.Port, content);
+
+                Console.WriteLine("Sending back to TCP on " + endpoint.Address.ToString() + " at " + endpoint.Port);
                 Send(handler, content);
             }
             else

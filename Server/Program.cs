@@ -26,19 +26,39 @@ namespace Server
         */
 
 
-        static void StartTCPClient()
+        static async void StartTCPClient()
         {
 
             TCPSocket socket = new TCPSocket();
 
             socket.StartListening(config.Servers[0].Port);
+
+            UDPSocket sock = new UDPSocket();
+
+
+            await sock.StartListening(config.Servers[0].Port);
+
+
+
         }
 
-        static async void StartUDPClient()
+        static async Task StartUDPClient()
         {
-            AsynchronousSocketListener socket = new AsynchronousSocketListener();
 
+
+                UDPSocket sock = new UDPSocket();
+
+                await sock.StartListening(config.Servers[0].Port);
+                await sock.SendTo(config.Client.Address, config.Client.Port, "Hello Client 1, this is the server");
+            
+
+            AsynchronousSocketListener socket = new AsynchronousSocketListener(sock);
             socket.StartListening(config.Servers[0].Address, config.Servers[0].Port);
+
+
+
+
+
 
             //await socket.StartListener(config.Servers[0].Port,config.Client.Address, config.Client.Port);
             //await socket.StartListener(config.Servers[0].Port, config.Host.Address, config.Host.Port);
@@ -51,13 +71,15 @@ namespace Server
         {
             try
             {
-                StartUDPClient();
+                StartUDPClient().Wait();
 
-               //StartTCPClient();
+
+
+                //StartTCPClient();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Error here" + ex.InnerException.Message);
             }
             while (true)
             {

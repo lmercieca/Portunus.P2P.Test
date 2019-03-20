@@ -49,6 +49,8 @@ public class AsynchronousClient
             Socket client = new Socket(ipAddress.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp);
 
+            client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+
             // Connect to the remote endpoint.  
             client.BeginConnect(remoteEP,
                 new AsyncCallback(ConnectCallback), client);
