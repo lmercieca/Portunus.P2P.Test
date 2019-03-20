@@ -37,15 +37,15 @@ namespace Client
 
             //new Thread(() =>
             //{
-            socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello server 1, this is the client");
-            socket.Send(config.Servers[1].Address, config.Servers[1].Port, "Hello server 2, this is the client");
+            //socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello server 1, this is the client");
+            //socket.Send(config.Servers[1].Address, config.Servers[1].Port, "Hello server 2, this is the client");
 
-            new Thread(async () =>
-            {
-                Thread.Sleep(5000);
-                await socket.StartListener(config.Host.Port, config.Servers[0].Address, config.Servers[0].Port);
-                await socket.StartListener(config.Host.Port, config.Servers[1].Address, config.Servers[1].Port);
-            });
+            //new Thread(async () =>
+            //{
+            //    Thread.Sleep(5000);
+            //    await socket.StartListener(config.Host.Port, config.Servers[0].Address, config.Servers[0].Port);
+            //    await socket.StartListener(config.Host.Port, config.Servers[1].Address, config.Servers[1].Port);
+            //});
 
 
             //});
@@ -55,15 +55,15 @@ namespace Client
                 Console.WriteLine("Enter new port");
                 int newPort = int.Parse(Console.ReadLine());
 
-                socket.Send(config.Servers[0].Address, newPort, "Hello server 1, this is the client");
-                socket.Send(config.Servers[1].Address, newPort, "Hello server 2, this is the client");
+                //socket.Send(config.Servers[0].Address, newPort, "Hello server 1, this is the client");
+                //socket.Send(config.Servers[1].Address, newPort, "Hello server 2, this is the client");
 
-                Thread.Sleep(5000);
-                new Thread(async () =>
-                {
-                    await socket.StartListener(newPort, config.Servers[0].Address, config.Servers[0].Port);
-                    await socket.StartListener(newPort, config.Servers[1].Address, config.Servers[1].Port);
-                });
+                //Thread.Sleep(5000);
+                //new Thread(async () =>
+                //{
+                //    await socket.StartListener(newPort, config.Servers[0].Address, config.Servers[0].Port);
+                //    await socket.StartListener(newPort, config.Servers[1].Address, config.Servers[1].Port);
+                //});
 
 
             }

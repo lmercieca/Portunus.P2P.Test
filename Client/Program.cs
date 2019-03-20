@@ -51,32 +51,33 @@ namespace Client
         static async void StartUDPClient()
         {
             AsynchronousClient socket = new AsynchronousClient();
-
-            new Thread(async () =>
-            {
-               socket.OpenNat(config.Servers[0].Address, config.Servers[0].Port);
-            });
-
-            new Thread(async () =>
-            {
-                socket.OpenNat(config.Servers[1].Address, config.Servers[0].Port);
-            });
-
-            new Thread(async () =>
-            {
-                await socket.StartListener(config.Client.Port, config.Servers[0].Address, config.Servers[0].Port);
-                await socket.StartListener(config.Client.Port, config.Servers[1].Address, config.Servers[1].Port);
-            });
-
-
-            Thread.Sleep(5000);
-
-            //new Thread(() =>
+            socket.StartClient(config.Client.Port, config.Servers[1].Address, config.Servers[1].Port);
+           
+            //new Thread(async () =>
             //{
-            socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello server 1, this is the client");
-            socket.Send(config.Servers[1].Address, config.Servers[1].Port, "Hello server 2, this is the client");
+            //   socket.OpenNat(config.Servers[0].Address, config.Servers[0].Port);
+            //});
 
-            Thread.Sleep(5000);
+            //new Thread(async () =>
+            //{
+            //    socket.OpenNat(config.Servers[1].Address, config.Servers[0].Port);
+            //});
+
+            //new Thread(async () =>
+            //{
+            //    await socket.StartListener(config.Client.Port, config.Servers[0].Address, config.Servers[0].Port);
+            //    await socket.StartListener(config.Client.Port, config.Servers[1].Address, config.Servers[1].Port);
+            //});
+
+
+            //Thread.Sleep(5000);
+
+            ////new Thread(() =>
+            ////{
+            //socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello server 1, this is the client");
+            //socket.Send(config.Servers[1].Address, config.Servers[1].Port, "Hello server 2, this is the client");
+
+            //Thread.Sleep(5000);
 
 
 
@@ -86,25 +87,25 @@ namespace Client
                 int newPort = int.Parse(Console.ReadLine());
 
 
-                new Thread(() =>
-                {
-                    socket.OpenNat(config.Servers[1].Address, newPort);
-                });
+                //new Thread(() =>
+                //{
+                //    socket.OpenNat(config.Servers[1].Address, newPort);
+                //});
 
-                new Thread(() =>
-                {
-                    socket.OpenNat(config.Servers[1].Address, newPort);
-                });
+                //new Thread(() =>
+                //{
+                //    socket.OpenNat(config.Servers[1].Address, newPort);
+                //});
 
-                socket.Send(config.Servers[0].Address, newPort, "Hello server 1, this is the client on new port" + newPort);
-                socket.Send(config.Servers[1].Address, newPort, "Hello server 2, this is the client on new port " + newPort);
+                //socket.Send(config.Servers[0].Address, newPort, "Hello server 1, this is the client on new port" + newPort);
+                //socket.Send(config.Servers[1].Address, newPort, "Hello server 2, this is the client on new port " + newPort);
 
-                Thread.Sleep(5000);
-                new Thread(async () =>
-                {
-                    await socket.StartListener(newPort, config.Servers[0].Address, config.Servers[0].Port);
-                    await socket.StartListener(newPort, config.Servers[1].Address, config.Servers[1].Port);
-                });
+                //Thread.Sleep(5000);
+                //new Thread(async () =>
+                //{
+                //    await socket.StartListener(newPort, config.Servers[0].Address, config.Servers[0].Port);
+                //    await socket.StartListener(newPort, config.Servers[1].Address, config.Servers[1].Port);
+                //});
 
 
 

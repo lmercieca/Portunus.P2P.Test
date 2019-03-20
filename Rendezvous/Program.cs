@@ -36,10 +36,10 @@ namespace Server
 
         static async void StartUDPClient()
         {
-            AsynchronousClient socket = new AsynchronousClient();
+            //AsynchronousClient socket = new AsynchronousClient();
 
-            await socket.StartListener(config.Servers[1].Port, config.Client.Address, config.Client.Port);
-            await socket.StartListener(config.Servers[1].Port, config.Host.Address, config.Host.Port);
+            //await socket.StartListener(config.Servers[1].Port, config.Client.Address, config.Client.Port);
+            //await socket.StartListener(config.Servers[1].Port, config.Host.Address, config.Host.Port);
         }
 
 
