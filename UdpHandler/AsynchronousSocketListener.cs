@@ -101,9 +101,10 @@ public class AsynchronousSocketListener
             content = state.sb.ToString();
             if (content.IndexOf("<EOF>") > -1)
             {
+                IPEndPoint endPoint = (handler.RemoteEndPoint as IPEndPoint);
                 // All the data has been read from the   
                 // client. Display it on the console.  
-                Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
+                Console.WriteLine("Read {0} bytes from socket " + endPoint.Address + ":" +  endPoint.Port +  ". \n Data : {1}",
                     content.Length, content);
                 // Echo the data back to the client.  
                 Send(handler, content);
