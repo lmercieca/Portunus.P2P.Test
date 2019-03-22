@@ -2,10 +2,10 @@
 <config>
   <clients>
     <host address="85.232.199.239" port="9001"></host>
-    <client address="85.232.199.239" port="9001"></client>
+    <client address=" 84.255.45.106" port="9001"></client>
   </clients>
   <servers>
-    <server address="23.100.7.35" port="9001"></server>
+    <server address="13.93.90.155" port="9001"></server>
     <server address="13.93.90.155" port="9001"></server>
   </servers>
 

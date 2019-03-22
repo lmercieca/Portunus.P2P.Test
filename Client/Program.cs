@@ -45,7 +45,20 @@ namespace Client
             });
 
             socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello Server 1, this is the client");
-            socket.Send(config.Servers[1].Address, config.Servers[1].Port, "Hello Server 2, this is the client");
+
+
+            while (true)
+            {
+                try
+                {
+                    socket.Send(config.Host.Address, config.Host.Port, "Hello host, this is the client");
+                    Thread.Sleep(500);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
 
         }
 
