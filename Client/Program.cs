@@ -54,11 +54,11 @@ namespace Client
             AsynchronousClient socket = new AsynchronousClient();
             socket.StartClient(config.Client.Port, config.Servers[1].Address, config.Servers[1].Port);
 
-            UDPSocket sock = new UDPSocket();
+            //UDPSocket sock = new UDPSocket();
 
 
-            await sock.StartListening(config.Client.Port);
-            await sock.SendTo(config.Servers[1].Address, config.Servers[1].Port, "Hello Server 1, this is the client");
+            //await sock.StartListening(config.Client.Port);
+            //await sock.SendTo(config.Servers[1].Address, config.Servers[1].Port, "Hello Server 1, this is the client");
 
 
             //new Thread(async () =>

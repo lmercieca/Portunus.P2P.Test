@@ -46,13 +46,13 @@ namespace Server
         {
 
 
-                UDPSocket sock = new UDPSocket();
+            //    UDPSocket sock = new UDPSocket();
 
-                await sock.StartListening(config.Servers[0].Port);
-                await sock.SendTo(config.Client.Address, config.Client.Port, "Hello Client 1, this is the server");
+            //    await sock.StartListening(config.Servers[0].Port);
+            //    await sock.SendTo(config.Client.Address, config.Client.Port, "Hello Client 1, this is the server");
             
 
-            AsynchronousSocketListener socket = new AsynchronousSocketListener(sock);
+            AsynchronousSocketListener socket = new AsynchronousSocketListener();
             socket.StartListening(config.Servers[0].Address, config.Servers[0].Port);
 
 

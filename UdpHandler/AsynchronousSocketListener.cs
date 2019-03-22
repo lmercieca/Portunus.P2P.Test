@@ -9,11 +9,9 @@ public class AsynchronousSocketListener
 {
     // Thread signal.  
     public  ManualResetEvent allDone = new ManualResetEvent(false);
-    UDPSocket sock;
-
-    public AsynchronousSocketListener(UDPSocket socket)
+    
+    public AsynchronousSocketListener()
     {
-        this.sock = socket;
     }
 
     public  void StartListening(string serverAddress, int port)
@@ -118,8 +116,8 @@ public class AsynchronousSocketListener
 
 
                 content += " from the server";
-                Console.WriteLine("Sending back to UDP on " + endpoint.Address.ToString() + " at " + endpoint.Port);
-                await sock.SendTo(endpoint.Address.ToString(), endpoint.Port, content);
+              //  Console.WriteLine("Sending back to UDP on " + endpoint.Address.ToString() + " at " + endpoint.Port);
+            //    await sock.SendTo(endpoint.Address.ToString(), endpoint.Port, content);
 
                 Console.WriteLine("Sending back to TCP on " + endpoint.Address.ToString() + " at " + endpoint.Port);
                 Send(handler, content);
