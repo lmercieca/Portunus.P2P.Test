@@ -33,11 +33,12 @@ namespace Client
             }
         }
 
-        static void StartTCPClient()
+        static async void StartTCPClient()
         {
 
             TCPSocket socket = new TCPSocket();
 
+        
             new Thread(() =>
             {
                 socket.StartListening(config.Client.Port);
@@ -52,7 +53,14 @@ namespace Client
         {
             AsynchronousClient socket = new AsynchronousClient();
             socket.StartClient(config.Client.Port, config.Servers[1].Address, config.Servers[1].Port);
-           
+
+            UDPSocket sock = new UDPSocket();
+
+
+            await sock.StartListening(config.Client.Port);
+            await sock.SendTo(config.Servers[1].Address, config.Servers[1].Port, "Hello Server 1, this is the client");
+
+
             //new Thread(async () =>
             //{
             //   socket.OpenNat(config.Servers[0].Address, config.Servers[0].Port);
@@ -83,8 +91,7 @@ namespace Client
 
             while (true)
             {
-                Console.WriteLine("Enter new port");
-                int newPort = int.Parse(Console.ReadLine());
+               
 
 
                 //new Thread(() =>
@@ -100,7 +107,7 @@ namespace Client
                 //socket.Send(config.Servers[0].Address, newPort, "Hello server 1, this is the client on new port" + newPort);
                 //socket.Send(config.Servers[1].Address, newPort, "Hello server 2, this is the client on new port " + newPort);
 
-                //Thread.Sleep(5000);
+                Thread.Sleep(5000);
                 //new Thread(async () =>
                 //{
                 //    await socket.StartListener(newPort, config.Servers[0].Address, config.Servers[0].Port);
