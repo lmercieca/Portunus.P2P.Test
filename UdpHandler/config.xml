@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <config>
   <clients>
-    <host address="85.232.199.239" port="9001"></host>
-    <client address=" 84.255.45.106" port="9001"></client>
+    <host address="84.255.45.106" port="9001"></host>
+    <client address="85.232.199.239" port="9001"></client>
   </clients>
   <servers>
     <server address="13.93.90.155" port="9001"></server>

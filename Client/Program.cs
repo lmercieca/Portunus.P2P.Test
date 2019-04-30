@@ -1,4 +1,4 @@
-﻿using Open.Nat;
+﻿//using Open.Nat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,42 +16,42 @@ namespace Client
         static ConfigManager config = new ConfigManager();
 
 
-        static void SetPortForward(int port)
-        {
-            try
-            {
-                var discoverer = new NatDiscoverer();
-                var cts = new CancellationTokenSource(10000);
-                var device = discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts).Result;
+        //static void SetPortForward(int port)
+        //{
+        //    try
+        //    {
+        //        var discoverer = new NatDiscoverer();
+        //        var cts = new CancellationTokenSource(10000);
+        //        var device = discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts).Result;
 
 
-                device.CreatePortMapAsync(new Mapping(Protocol.Udp, 5001, port, "Portunus")).Wait();
-            }
-            catch
-            {
-                Console.Write(' ');
-            }
-        }
+        //        device.CreatePortMapAsync(new Mapping(Protocol.Udp, 5001, port, "Portunus")).Wait();
+        //    }
+        //    catch
+        //    {
+        //        Console.Write(' ');
+        //    }
+        //}
 
         static async void StartTCPClient()
         {
 
             TCPSocket socket = new TCPSocket();
 
-        
+
             new Thread(() =>
             {
                 socket.StartListening(config.Client.Port);
             });
-
-            socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello Server 1, this is the client");
+             
+            socket.Send(config.Servers[0].Address, config.Servers[0].Port, "Hello Server 1, this is the host");
 
 
             while (true)
             {
                 try
                 {
-                    socket.Send(config.Host.Address, config.Host.Port, "Hello host, this is the client");
+                    socket.Send(config.Client.Address, config.Client.Port, "Hello host, this is the client");
                     Thread.Sleep(500);
                 }
                 catch (Exception ex)
@@ -59,13 +59,19 @@ namespace Client
                     Console.WriteLine(ex.Message);
                 }
             }
+        }
+
+        static async void StartServer()
+        {
+            AsynchronousSocketListener socket = new AsynchronousSocketListener();
+            socket.StartListening(config.Client.Address, config.Client.Port);
 
         }
 
         static async void StartUDPClient()
         {
-            AsynchronousClient socket = new AsynchronousClient();
-            socket.StartClient(config.Client.Port, config.Servers[1].Address, config.Servers[1].Port);
+            AsynchronousClient clientSocket = new AsynchronousClient();
+            clientSocket.StartClient(config.Host.Port, config.Servers[1].Address, config.Servers[1].Port);
 
             //UDPSocket sock = new UDPSocket();
 
@@ -104,7 +110,7 @@ namespace Client
 
             while (true)
             {
-               
+
 
 
                 //new Thread(() =>
@@ -135,6 +141,12 @@ namespace Client
 
         static void Main(string[] args)
         {
+
+            Thread threadBG = new Thread(StartServer);
+            threadBG.IsBackground = true;
+            threadBG.Start();
+
+
             //StartTCPClient();
             StartUDPClient();
 
