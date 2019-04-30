@@ -148,7 +148,7 @@ namespace Client
 
 
             //StartTCPClient();
-            StartUDPClient();
+            //StartUDPClient();
 
             while (true)
             {
