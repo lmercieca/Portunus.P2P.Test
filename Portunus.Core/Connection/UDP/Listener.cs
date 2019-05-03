@@ -34,9 +34,9 @@ namespace Portunus.Comm.Udp
 
                 InvokeMessageReceived(args.RemoteAddress, int.Parse(args.RemotePort), messageReceived);
 
-                receiver.SendToAsync(args.ByteData, args.RemoteAddress, 5001);
-                receiver.SendToAsync(args.ByteData, args.RemoteAddress, int.Parse(args.RemotePort));
-                receiver.SendToAsync(args.ByteData, args.RemoteAddress, 5002);
+                //receiver.SendToAsync(args.ByteData, args.RemoteAddress, 5001);
+                //receiver.SendToAsync(args.ByteData, args.RemoteAddress, int.Parse(args.RemotePort));
+                //receiver.SendToAsync(args.ByteData, args.RemoteAddress, 5002);
             };
 
             // listen for udp traffic on listenPort

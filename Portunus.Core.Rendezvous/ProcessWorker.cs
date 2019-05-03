@@ -8,7 +8,7 @@ namespace Portunus.Core.Rendezvous
 {
     public class ProcessWorker
     {
-        static Comm.Udp.Client udpClient = new Comm.Udp.Client();
+         static Comm.Udp.Client udpClient = new Comm.Udp.Client();
 
         static Comm.Tcp.Listener tcpListener = new Comm.Tcp.Listener();
         static Comm.Udp.Listener udpListener = new Comm.Udp.Listener();
@@ -19,9 +19,17 @@ namespace Portunus.Core.Rendezvous
             string ip = args[1];
             int port = int.Parse(args[2]);
 
-            udpListener.MessageReceived += UdpListener_MessageReceived;
-            udpListener.Listen(port);
-
+            if (isTcp)
+            {
+                tcpListener.Connect("46.11.134.149",5001).Wait();
+                tcpListener.MessageReceived += Listener_MessageReceived;
+                tcpListener.Listen(port).Wait();
+            }
+            else
+            {
+                udpListener.MessageReceived += UdpListener_MessageReceived;
+                udpListener.Listen(port);
+            }
 
             while (true)
             {
@@ -35,5 +43,12 @@ namespace Portunus.Core.Rendezvous
             await udpClient.SendMessage(ip, port, "Received (UDP): " + message);
         }
 
+        private static async void Listener_MessageReceived(string ip, int port, string message)
+        {
+            Console.WriteLine(message);
+            //await tcpClient.SendMessage(ip, port, "Sending (TCP): " + message + " on " + ip + ":" + port);
+
+            //await tcpClient.SendMessage(ip, 5001, "Sending (TCP): " + message + " on " + ip + ":" + 5001);
+        }
     }
 }

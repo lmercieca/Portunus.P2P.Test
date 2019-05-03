@@ -40,6 +40,16 @@ namespace Portunus.Comm.Tcp
             // wait a little before sending the next bit of data
             await Task.Delay(TimeSpan.FromMilliseconds(500));
 
+            byte[] buffer = new byte[2048]; // read in chunks of 2KB
+
+            while (true)
+            {
+                var s = client.ReadStream.Read(buffer, 0, buffer.Length);
+                string result = Encoding.Default.GetString(buffer).Trim().Replace("\0", "");
+
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+
+            }
         }
 
         public async Task Disconnect()
@@ -52,6 +62,8 @@ namespace Portunus.Comm.Tcp
             StringBuilder sbResult = new StringBuilder();
 
             var listener = new TcpSocketListener();
+
+            
 
             // when we get connections, read byte-by-byte from the socket's read stream
             listener.ConnectionReceived += async (sender, args) =>
@@ -81,6 +93,8 @@ namespace Portunus.Comm.Tcp
                     sbResult = new StringBuilder();
 
                     await SendMessage(sbResult.ToString());
+
+                   
                 }
             };
 

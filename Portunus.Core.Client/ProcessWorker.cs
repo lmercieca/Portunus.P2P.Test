@@ -10,6 +10,8 @@ namespace Portunus.Core.Client
     {
         //   static Comm.Tcp.Client tcpClient = new Comm.Tcp.Client();
         static Comm.Udp.Client udpClient = new Comm.Udp.Client();
+
+        static Comm.Tcp.Listener tcpListener = new Comm.Tcp.Listener();
         static Comm.Udp.Listener udpListener = new Comm.Udp.Listener();
 
         public static void Main(string[] args)
@@ -18,39 +20,49 @@ namespace Portunus.Core.Client
             string ip = args[1];
             int port = int.Parse(args[2]);
 
-            Process(isTcp, ip, port);
-
-
-
-            udpListener.MessageReceived += UdpListener_MessageReceived; ;
-            udpListener.Listen(5002);
-
-
+            Process(isTcp, ip, port).Wait();
+            
             while (true)
             {
                 System.Threading.Thread.Sleep(500);
+
+                string s = Console.ReadLine();
+                tcpListener.Listen(int.Parse(s)).Wait();
+
             }
 
         }
 
+        private static async Task<String> Process(bool isTcp, string ip, int port)
+        {
+            if (isTcp)
+            {
+                tcpListener.MessageReceived += Listener_MessageReceived;
+               //  tcpListener.Listen(5001).Wait();
+              await tcpListener.Connect("13.93.90.155", 5001);
+                await tcpListener.SendMessage("Hello");
+
+
+            }
+            else
+            {
+                udpListener.MessageReceived += UdpListener_MessageReceived;
+                udpListener.Listen(port);
+            }
+
+            return await Task.FromResult("");
+        }
+
         private static void UdpListener_MessageReceived(string ip, int port, string message)
-        {
-            Console.WriteLine(message + " from " + ip + ":" + port);
-        }
-
-        private static void Process(bool isTcp, string ip, int port)
-        {
-
-            udpClient.MessageReceived += UdpClient_MessageReceived;
-            udpClient.SendMessage(ip, port, "hello").Wait();
-         
-        }
-
-        private static void UdpClient_MessageReceived(string message)
         {
             Console.WriteLine(message);
 
         }
 
+        private static void Listener_MessageReceived(string ip, int port, string message)
+        {
+            Console.WriteLine(message);
+
+        }
     }
 }
